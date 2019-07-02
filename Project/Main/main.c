@@ -32,7 +32,7 @@ int main()
 		delay_ms(1000);
 		time2 =micros();
 		time = time2 - time1;
-
+//add iic test
 	while(1)
 	{
 //				if(GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_13)==1)	 
