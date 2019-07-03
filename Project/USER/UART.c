@@ -14,30 +14,21 @@ void UART_Init(void)
 	GPIO_PinAFConfig(GPIOA,GPIO_PinSource3,GPIO_AF_USART1); //GPIOA10复用为USART1
 	
 	
-	  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;    // ??9 
-        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;  // ???????
-        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP ;// ????????? ????
-        GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //???
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz ; // ??
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;    // ??9 
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;  // ???????
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP ;// ????????? ????
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //???
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz ; // ??
 
-	    GPIO_Init(GPIOA , &GPIO_InitStructure);
+	GPIO_Init(GPIOA , &GPIO_InitStructure);
 
-        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;    // ??9 
-        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;  // ???????
-        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP ;// ????????? ????
-        GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //???
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz ; // ??
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;    // ??9 
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;  // ???????
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP ;// ????????? ????
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //???
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz ; // ??
 
-        GPIO_Init(GPIOA , &GPIO_InitStructure);
-
-	
-	//USART1端口配置
-//  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10; //GPIOA9与GPIOA10
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;//复用功能
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	//速度50MHz
-//	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //推挽复用输出
-//	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL; //上拉
-//	GPIO_Init(GPIOA,&GPIO_InitStructure); //初始化PA9，PA10
+  GPIO_Init(GPIOA , &GPIO_InitStructure);
 
 	
    //USART1 初始化设置
@@ -74,10 +65,4 @@ while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
 return ch;
 }
 
-//int fputc(int ch, FILE *f)
-//{ 	
-//	while((USART2->SR&0X40)==0);//循环发送,直到发送完毕   
-//	USART2->DR = (u8) ch;      
-//	return ch;
-//}
 

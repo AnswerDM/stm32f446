@@ -31,3 +31,6 @@ void read_test(void)
 	
 	GPIO_Init(GPIOB,&GPIO_InitStructure);
 }
+
+
+

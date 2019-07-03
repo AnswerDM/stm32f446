@@ -7,6 +7,8 @@
 #define I2C_WR	0		/* Ð´¿ØÖÆbit */
 #define I2C_RD	1		/* ¶Á¿ØÖÆbit */
 
+#define I2C2_SLAVE_ADDRESS7    0x8E
+
 void i2c_Init(void);
 void i2c_Start(void);
 void i2c_Stop(void);

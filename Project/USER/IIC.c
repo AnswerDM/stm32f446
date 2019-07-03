@@ -1,5 +1,7 @@
 #include "IIC.h"
 
+
+//#define soft_IIC
 /*
 	应用说明：
 	用gpio模拟i2c总线
@@ -40,6 +42,7 @@
 */
 void i2c_Init(void)
 {
+	#ifdef soft_IIC
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	RCC_APB2PeriphClockCmd(RCC_I2C_PORT, ENABLE);	/* 打开GPIO时钟 */
@@ -57,6 +60,46 @@ void i2c_Init(void)
 	/* 给一个停止信号, 复位I2C总线上的所有设备到待机模式 */
 	i2c_Stop();
 	i2c_bus_repair();
+	#else
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	I2C_InitTypeDef I2C_InitStructure;
+	
+	I2C_Cmd(I2C2, DISABLE);
+	I2C_DeInit(I2C2);
+ 
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);  //开启GPIOB和AFIO复用时钟
+	GPIO_PinAFConfig(GPIOB,GPIO_PinSource10,GPIO_AF9_I2C2);
+	GPIO_PinAFConfig(GPIOB,GPIO_PinSource11,GPIO_AF9_I2C2);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2, ENABLE);											//开启I2C2的时钟
+	/* Configure IO connected to IIC*********************/
+	 GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_10 | GPIO_Pin_11;                	//对I2C2对应的IO口进行初始化
+	 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 	 //注意设为复用开漏输出
+	 GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+	 GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+ 	 GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	 I2C_InitStructure.I2C_Mode = I2C_Mode_SMBusDevice;																//设置模式为I2C模式
+ 	 I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;                       //设置I2C占空比
+ 	 I2C_InitStructure.I2C_OwnAddress1 = I2C2_SLAVE_ADDRESS7;									//设置本机I2C的地址
+ 	 I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;															//开启I2C的应答功能
+ 	 I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit; //设置I2C应答地址为7位
+ 	 I2C_InitStructure.I2C_ClockSpeed = 20000;                                  //设置I2C工作时钟频率
+	 
+	 I2C_Init(I2C2, &I2C_InitStructure);																					//对I2C2进行初始化
+	 
+	 NVIC_InitTypeDef NVIC_InitStructure;
+   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+   NVIC_InitStructure.NVIC_IRQChannel = I2C2_EV_IRQn;
+   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+   NVIC_Init(&NVIC_InitStructure);
+	 
+	 I2C_Cmd(I2C2, ENABLE);  //使I2C2
+	 I2C_ITConfig(I2C2,I2C_IT_EVT|I2C_IT_BUF,ENABLE); 
+	#endif
 }
 
 /*
